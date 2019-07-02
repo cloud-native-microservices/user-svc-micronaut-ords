@@ -1,0 +1,10 @@
+micronaut:
+  application:
+    name: user-service-ords
+codes:
+  recursive:
+    cnms:
+      ords:
+        client-id:
+        client-secret:
+        base-url:

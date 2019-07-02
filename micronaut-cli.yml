@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: codes.recursive.cnms.ords
+---
+testFramework: junit
+sourceLanguage: java
