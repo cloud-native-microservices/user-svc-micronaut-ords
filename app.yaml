@@ -1,0 +1,52 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: user-svc-micronaut-native
+  labels:
+    app: user-svc-micronaut-native
+spec:
+  type: LoadBalancer
+  selector:
+    app: user-svc-micronaut-native
+  ports:
+  - port: 8080
+    targetPort: 8080
+    name: http
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: user-svc-micronaut-native
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: user-svc-micronaut-native
+        version: v1
+    spec:
+      containers:
+      - name: user-svc-micronaut-native
+        image: phx.ocir.io/toddrsharp/cloud-native-microservice/user-svc-micronaut-native:latest
+        env:
+          - name: CODES_RECURSIVE_CNMS_ORDS_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: user-svc-micronaut-native-secrets
+                key: clientId
+          - name: CODES_RECURSIVE_CNMS_ORDS_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: user-svc-micronaut-native-secrets
+                key: clientSecret
+          - name: CODES_RECURSIVE_CNMS_ORDS_BASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: user-svc-micronaut-native-secrets
+                key: baseUrl
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+      imagePullSecrets:
+      - name: regcred
+---

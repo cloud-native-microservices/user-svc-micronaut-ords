@@ -6,6 +6,12 @@ This service utilizes Micronaut with ORDS to persist users to a `user` table in 
 
 ## Setup
 
+---
+
+**Note**: It is not required to run the setup scripts below. They are included for reference only.
+
+---
+
 This service was created using the Micronaut CLI like so:
 
 ```bash
@@ -102,7 +108,6 @@ transfer-encoding: chunked
 Save a new user with invalid data (will return 400 and validation errors):
 
 ```bash
-curl -iX POST -H "Content-Type: application/json" -d '{"first_name": "Tony", "last_name": "Stark", "username": null}' http://localhost:8080/ords/user                              
 HTTP/1.1 400 Bad Request
 Date: Tue, 2 Jul 2019 14:00:21 GMT
 content-type: application/json
@@ -130,12 +135,12 @@ List all users:
 ```bash
 curl -iX GET http://localhost:8080/ords/users                                                                                                                                      
 HTTP/1.1 200 OK
-Date: Tue, 2 Jul 2019 14:05:29 GMT
+Date: Wed, 3 Jul 2019 18:19:03 GMT
 content-type: application/json
-content-length: 1434
+content-length: 1016
 connection: keep-alive
 
-{"items":[{"id":"8C561D58E856DD25E0532010000AF462","first_name":"todd","last_name":"sharp","username":"tsharp","created_on":"2019-06-27T15:31:40.385Z","links":[{"rel":"self","href":"https://hvg9nd7xibsaegv-demodb.adb.us-phoenix-1.oraclecloudapps.com/ords/usersvc/users/8C561D58E856DD25E0532010000AF462"}]},{"id":"8C561D58E857DD25E0532010000AF462","first_name":"gerald","last_name":"venzl","username":"gvenzl","created_on":"2019-06-27T15:31:40.517Z","links":[{"rel":"self","href":"https://hvg9nd7xibsaegv-demodb.adb.us-phoenix-1.oraclecloudapps.com/ords/usersvc/users/8C561D58E857DD25E0532010000AF462"}]},{"id":"8C561D58E858DD25E0532010000AF462","first_name":"jeff","last_name":"smith","username":"thatjeff","created_on":"2019-06-27T15:31:40.646Z","links":[{"rel":"self","href":"https://hvg9nd7xibsaegv-demodb.adb.us-phoenix-1.oraclecloudapps.com/ords/usersvc/users/8C561D58E858DD25E0532010000AF462"}]}],"hasMore":false,"limit":25,"offset":0,"count":3,"links":[{"rel":"self","href":"https://hvg9nd7xibsaegv-demodb.adb.us-phoenix-1.oraclecloudapps.com/ords/usersvc/users/"},{"rel":"edit","href":"https://hvg9nd7xibsaegv-demodb.adb.us-phoenix-1.oraclecloudapps.com/ords/usersvc/users/"},{"rel":"describedby","href":"https://hvg9nd7xibsaegv-demodb.adb.us-phoenix-1.oraclecloudapps.com/ords/usersvc/metadata-catalog/users/"},{"rel":"first","href":"https://hvg9nd7xibsaegv-demodb.adb.us-phoenix-1.oraclecloudapps.com/ords/usersvc/users/"}]}
+{"users":[{"id":"8C561D58E856DD25E0532010000AF462","username":"tsharp","first_name":"todd","last_name":"sharp","created_on":"2019-06-27T15:31:40.385Z"},{"id":"8C561D58E857DD25E0532010000AF462","username":"gvenzl","first_name":"gerald","last_name":"venzl","created_on":"2019-06-27T15:31:40.517Z"},{"id":"8C561D58E858DD25E0532010000AF462","username":"thatjeff","first_name":"jeff","last_name":"smith","created_on":"2019-06-27T15:31:40.646Z"},{"id":"8CB931BBDA2ABCF7E0532010000A09C7","username":"ironman","first_name":"Tony","last_name":"Stark","created_on":"2019-07-02T20:00:02.049Z"},{"id":"8CB92D3E1E53BCE6E0532010000A5B6D","username":"ironman","first_name":"Tony","last_name":"Stark","created_on":"2019-07-02T19:59:03.883Z"},{"id":"8CB66A3C911BC2EAE0532010000A57FB","username":"ironman","first_name":"Tony","last_name":"Stark","created_on":"2019-07-02T16:41:22.353Z"},{"id":"8CCBD5FBBB5D98EDE0532010000A7B85","username":"ironman","first_name":"Anthony","last_name":"Stark","created_on":"2019-07-03T18:14:44.638Z"}]}
 ```
 
 List all users (paginated):
@@ -143,12 +148,12 @@ List all users (paginated):
 ```bash
 curl -iX GET http://localhost:8080/ords/users/0/1                                                                                                                                  
 HTTP/1.1 200 OK
-Date: Tue, 2 Jul 2019 14:05:46 GMT
+Date: Wed, 3 Jul 2019 18:20:05 GMT
 content-type: application/json
-content-length: 973
+content-length: 199
 connection: keep-alive
 
-{"items":[{"id":"8C561D58E856DD25E0532010000AF462","first_name":"todd","last_name":"sharp","username":"tsharp","created_on":"2019-06-27T15:31:40.385Z","links":[{"rel":"self","href":"https://hvg9nd7xibsaegv-demodb.adb.us-phoenix-1.oraclecloudapps.com/ords/usersvc/users/8C561D58E856DD25E0532010000AF462"}]}],"hasMore":true,"limit":1,"offset":0,"count":1,"links":[{"rel":"self","href":"https://hvg9nd7xibsaegv-demodb.adb.us-phoenix-1.oraclecloudapps.com/ords/usersvc/users/"},{"rel":"edit","href":"https://hvg9nd7xibsaegv-demodb.adb.us-phoenix-1.oraclecloudapps.com/ords/usersvc/users/"},{"rel":"describedby","href":"https://hvg9nd7xibsaegv-demodb.adb.us-phoenix-1.oraclecloudapps.com/ords/usersvc/metadata-catalog/users/"},{"rel":"first","href":"https://hvg9nd7xibsaegv-demodb.adb.us-phoenix-1.oraclecloudapps.com/ords/usersvc/users/?limit=1"},{"rel":"next","href":"https://hvg9nd7xibsaegv-demodb.adb.us-phoenix-1.oraclecloudapps.com/ords/usersvc/users/?offset=1&limit=1"}]}
+{"offset":0,"count":1,"hasMore":true,"limit":1,"users":[{"id":"8C561D58E856DD25E0532010000AF462","username":"tsharp","first_name":"todd","last_name":"sharp","created_on":"2019-06-27T15:31:40.385Z"}]}
 ```
 
 Delete a user:
@@ -178,12 +183,12 @@ For more, see [https://docs.micronaut.io/latest/guide/index.html#management](htt
 
 ## Dockerfile
 
-The generated `Dockerfile` requires some changes. See the `Dockerfile` for reference, particularly the need to install the `ojdbc` dependencies to the local Maven repo so they are included in the build since these are unavailable via public Maven repos. 
+The generated `Dockerfile` requires some changes. See the `Dockerfile` for reference.
 
 ## Building the Docker Image
 
 ```
-docker build -t user-svc-ords .
+docker build -t user-svc-micronaut-native .
 ```
 
 ## Running with Docker
@@ -195,19 +200,73 @@ export CODES_RECURSIVE_CNMS_ORDS_CLIENT_ID=[CLIENT ID]
 export CODES_RECURSIVE_CNMS_ORDS_CLIENT_SECRET=[CLIENT SECRET]
 export CODES_RECURSIVE_CNMS_ORDS_BASE_URL=[ATP ORDS BASE URL]
 ```
+Build with:
+
+```bash
+docker build -t user-svc-micronaut . 
+``` 
 Run with: 
 
 ```bash
-docker run -d --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_ID --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_SECRET --env CODES_RECURSIVE_CNMS_ORDS_BASE_URL --rm -p 8080:8080 -t user-service-ords
+docker run -d --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_ID --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_SECRET --env CODES_RECURSIVE_CNMS_ORDS_BASE_URL --rm -p 8080:8080 -t user-svc-micronaut
 ```
+
+Test the endpoints as [described above](#test-endpoints)
+
+## Building a Docker Image That Runs a Graal Native Image
+
+```bash
+docker build -f Dockerfile-graal -t user-svc-micronaut-native . 
+``` 
+
+## Running the Graal Based Docker Image
+
+```bash
+docker run -d --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_ID --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_SECRET --env CODES_RECURSIVE_CNMS_ORDS_BASE_URL --rm -p 8080:8080 -t user-service-ords-native
+```
+
+## Building for Deployment
+
+```bash
+docker build -f Dockerfile-graal -t [region].ocir.io/[tenancy]/[repo]/user-svc-micronaut-native .   
+docker push [region].ocir.io/[tenancy]/[repo]/user-svc-micronaut-native
+```
+
 
 Test the endpoints as [described above](#test-endpoints)
 
 ## Deploying to Kubernetes
 
+### Create Secret
+
+Base64 encode the secret values before creating the YAML file.
+
+On *nix systems, use something like this to accomplish for each value:
+
+```bash
+echo -n "client_id.." | base64
+```
+
+Then create a YAML file:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: user-svc-micronaut-native-secrets
+data:
+  clientId: [ORDS Client ID Base64 Encoded]
+  clientSecret: [ORDS Client Secret Base64 Encoded]
+  baseUrl: [ORDS Base URL Base64 Encoded]
+---
+```
+
+Deploy secret and app via:
+
 ```
 kubectl cluster-info                         # Verify which cluster
 kubectl get pods                             # Verify connectivity to cluster
+kubectl create -f secret.yaml               # Deploy secret
 kubectl create -f app.yaml               # Deploy application
-kubectl get service user-svc  # Verify deployed service
+kubectl get service user-svc-micronaut-native  # Verify deployed service
 ```
