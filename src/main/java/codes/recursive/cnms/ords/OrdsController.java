@@ -77,6 +77,19 @@ public class OrdsController {
         );
     }
 
+    @Get("/username/{username}")
+    public HttpResponse<User> getUserByUsername(String username) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map users = ordsClient.getByUsername(username);
+        List<User> items = objectMapper.convertValue(users.get("items"), new TypeReference<List<User>>() {});
+        if( items.size() > 0 ) {
+            return HttpResponse.ok(items.get(0));
+        }
+        else {
+            return HttpResponse.notFound();
+        }
+    }
+
     @Post("/user")
     public HttpResponse saveUser(@Body @Valid User user) throws URISyntaxException {
         User savedUser = ordsClient.saveUser(user);

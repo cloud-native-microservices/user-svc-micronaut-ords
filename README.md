@@ -183,6 +183,19 @@ transfer-encoding: chunked
 connection: close
 ```
 
+Get user by username:
+
+```bash
+curl -iX GET http://localhost:8080/ords/username/ironman                                                                                                                   ✹master 
+HTTP/1.1 200 OK
+Date: Wed, 3 Jul 2019 19:23:55 GMT
+content-type: application/json
+content-length: 121
+connection: keep-alive
+
+{"id":"8CB931BBDA2ABCF7E0532010000A09C7","first_name":"Tony","last_name":"Stark","created_on":"2019-07-02T20:00:02.049Z"}
+```
+
 ## View Health and Metrics
 
 Micronaut does not enable health and metrics out of the box, but they are available via an add-on project. 

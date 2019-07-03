@@ -18,6 +18,9 @@ public abstract class OrdsClient {
     @Get("/ords/usersvc/users/{id}")
     public abstract User getUser(@QueryValue String id);
 
+    @Get("/ords/usersvc/users/user/{username}")
+    public abstract Map getByUsername(@QueryValue String username);
+
     @Get("/ords/usersvc/users/?offset={offset}&limit={limit}")
     public abstract Map listUsers(@QueryValue int offset, @QueryValue int limit);
 
