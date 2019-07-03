@@ -6,11 +6,8 @@ This service utilizes Micronaut with ORDS to persist users to a `user` table in 
 
 ## Setup
 
----
 
-**Note**: It is not required to run the setup scripts below. They are included for reference only.
-
----
+> **Note**: It is not required to run the setup scripts below. They are included for reference only.
 
 This service was created using the Micronaut CLI like so:
 
