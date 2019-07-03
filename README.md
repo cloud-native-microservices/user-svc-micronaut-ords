@@ -8,8 +8,11 @@ To learn more about ORDS, refer to [this blog post](https://blogs.oracle.com/dev
 
 ## Setup
 
+---
 
 > **Note**: It is not required to run the Micronaut CLI setup scripts below if you've cloned this repository. They are included for reference only.
+
+---
 
 This service was created using the Micronaut CLI like so:
 
@@ -23,7 +26,11 @@ If you'd like support for GraalVM, create the app with the following command ins
 mn create-app codes.recursive.cnms.ords.user-service-ords --features graal-native-image
 ```
 
+---
+
 > **Note**: You will, however, need to run these SQL scripts...
+
+---
 
 The DDL to create the database table looks like so:
 
