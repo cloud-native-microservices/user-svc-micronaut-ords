@@ -1,5 +1,28 @@
 # Cloud Native Microservices - User Service
 
+Table of Contents
+=================
+
+* [Cloud Native Microservices \- User Service](#cloud-native-microservices---user-service)
+  * [Framework](#framework)
+  * [Setup](#setup)
+    * [ORDS 'Auto' REST Enable](#ords-auto-rest-enable)
+    * [Custom ORDS Services](#custom-ords-services)
+  * [Dependencies](#dependencies)
+  * [Building](#building)
+  * [Setting environment variables](#setting-environment-variables)
+  * [Running](#running)
+  * [Test Endpoints](#test-endpoints)
+  * [View Health and Metrics](#view-health-and-metrics)
+  * [Dockerfile](#dockerfile)
+  * [Building the Docker Image](#building-the-docker-image)
+  * [Running with Docker](#running-with-docker)
+  * [Building a Docker Image That Runs A Graal Native Image](#building-a-docker-image-that-runs-a-graal-native-image)
+  * [Running the Graal Based Docker Image](#running-the-graal-based-docker-image)
+  * [Building for Deployment](#building-for-deployment)
+  * [Deploying to Kubernetes](#deploying-to-kubernetes)
+    * [Create Secret](#create-secret)
+
 ## Framework
 
 This service utilizes Micronaut with ORDS to persist users to a `user` table in an Oracle ATP instance.
@@ -211,7 +234,7 @@ content-type: application/json
 content-length: 11
 connection: keep-alive
 
-{"OK":true}                                                                
+{"OK":true}     
 ```
 
 Save a new user (ID is returned in `Location` header):
@@ -235,7 +258,7 @@ content-type: application/json
 content-length: 98
 connection: close
 
-{"_links":{"self":{"href":"/user","templated":false}},"message":"user.username: must not be null"}%
+{"_links":{"self":{"href":"/user","templated":false}},"message":"user.username: must not be null"}
 ```
 
 Get the new user
@@ -336,7 +359,7 @@ docker run -d --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_ID --env CODES_RECURSIVE_CN
 
 Test the endpoints as [described above](#test-endpoints)
 
-## Building a Docker Image That Runs a Graal Native Image
+## Building a Docker Image That Runs A Graal Native Image
 
 ```bash
 docker build -f Dockerfile-graal -t user-svc-micronaut-native . 
