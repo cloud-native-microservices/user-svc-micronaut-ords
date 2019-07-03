@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Validated
-@Controller("/ords")
+@Controller("/user")
 public class OrdsController {
     private final OrdsClient ordsClient;
     private final String baseUri;
@@ -38,7 +38,7 @@ public class OrdsController {
         );
     }
 
-    @Get("/user/{id}")
+    @Get("/{id}")
     public HttpResponse<User> getUser(String id) {
         User user = ordsClient.getUser(id);
         if( user != null ) {
@@ -90,7 +90,7 @@ public class OrdsController {
         }
     }
 
-    @Post("/user")
+    @Post("/")
     public HttpResponse saveUser(@Body @Valid User user) throws URISyntaxException {
         User savedUser = ordsClient.saveUser(user);
         return HttpResponse.created(
@@ -98,7 +98,7 @@ public class OrdsController {
         );
     }
 
-    @Delete("/user/{id}")
+    @Delete("/{id}")
     public HttpResponse deleteUser(String id) {
         Map deleteUser = ordsClient.deleteUser(id);
         return HttpResponse.noContent();

@@ -92,7 +92,7 @@ java -jar build/libs/user-service-ords-0.1.jar
 Get User Service Endpoint (returns 200 OK):
 
 ```bash
-curl -iX GET http://localhost:8080/ords                                                                                                                                            
+curl -iX GET http://localhost:8080/user                                                                                                                                            
 HTTP/1.1 200 OK
 Date: Tue, 2 Jul 2019 14:04:25 GMT
 content-type: application/json
@@ -105,9 +105,9 @@ connection: keep-alive
 Save a new user (ID is returned in `Location` header):
 
 ```bash
-curl -iX POST -H "Content-Type: application/json" -d '{"first_name": "Tony", "last_name": "Stark", "username": "ironman"}' http://localhost:8080/ords/user                         
+curl -iX POST -H "Content-Type: application/json" -d '{"first_name": "Tony", "last_name": "Stark", "username": "ironman"}' http://localhost:8080/user                         
 HTTP/1.1 201 Created
-Location: http://localhost:8080/ords/user/8CA3E5278A78A1B4E0532010000A7AFF
+Location: http://localhost:8080/user/user/8CA3E5278A78A1B4E0532010000A7AFF
 Date: Tue, 2 Jul 2019 13:59:09 GMT
 connection: keep-alive
 transfer-encoding: chunked
@@ -122,13 +122,13 @@ content-type: application/json
 content-length: 103
 connection: close
 
-{"_links":{"self":{"href":"/ords/user","templated":false}},"message":"user.username: must not be null"}%  
+{"_links":{"self":{"href":"/user/user","templated":false}},"message":"user.username: must not be null"}%  
 ```
 
 Get the new user
 
 ```bash
-curl -iX GET http://localhost:8080/ords/user/8CA3E5278A78A1B4E0532010000A7AFF                                                                                                      
+curl -iX GET http://localhost:8080/user/8CB931BBDA2ABCF7E0532010000A09C7                                                                                                      
 HTTP/1.1 200 OK
 Date: Tue, 2 Jul 2019 14:00:49 GMT
 content-type: application/json
@@ -141,7 +141,7 @@ connection: keep-alive
 List all users:
 
 ```bash
-curl -iX GET http://localhost:8080/ords/users                                                                                                                                      
+curl -iX GET http://localhost:8080/user/users                                                                                                                                      
 HTTP/1.1 200 OK
 Date: Wed, 3 Jul 2019 18:19:03 GMT
 content-type: application/json
@@ -154,7 +154,7 @@ connection: keep-alive
 List all users (paginated):
 
 ```bash
-curl -iX GET http://localhost:8080/ords/users/0/1                                                                                                                                  
+curl -iX GET http://localhost:8080/user/users/0/1                                                                                                                                  
 HTTP/1.1 200 OK
 Date: Wed, 3 Jul 2019 18:20:05 GMT
 content-type: application/json
@@ -167,7 +167,7 @@ connection: keep-alive
 Delete a user:
 
 ```bash
-curl -iX DELETE http://localhost:8080/ords/user/8CB41C8DFB2FA3F6E0532010000A42F8                                                                                                   
+curl -iX DELETE http://localhost:8080/user/8CB41C8DFB2FA3F6E0532010000A42F8                                                                                                   
 HTTP/1.1 204 No Content
 Date: Tue, 2 Jul 2019 14:06:50 GMT
 connection: keep-alive
@@ -176,7 +176,7 @@ connection: keep-alive
 Confirm delete (same GET by ID will return 404):
 
 ```bash
-curl -iX GET http://localhost:8080/ords/user/8CB41C8DFB2FA3F6E0532010000A42F8                                                                                                      
+curl -iX GET http://localhost:8080/user/8CB41C8DFB2FA3F6E0532010000A42F8                                                                                                      
 HTTP/1.1 404 Not Found
 Date: Tue, 2 Jul 2019 14:08:13 GMT
 transfer-encoding: chunked
@@ -186,7 +186,7 @@ connection: close
 Get user by username:
 
 ```bash
-curl -iX GET http://localhost:8080/ords/username/ironman                                                                                                                   ✹master 
+curl -iX GET http://localhost:8080/user/username/ironman                                                                                                                   ✹master 
 HTTP/1.1 200 OK
 Date: Wed, 3 Jul 2019 19:23:55 GMT
 content-type: application/json
