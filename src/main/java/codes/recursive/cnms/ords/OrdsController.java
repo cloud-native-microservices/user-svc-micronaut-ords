@@ -7,9 +7,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.validation.Validated;
-import io.micronaut.validation.validator.Validator;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
