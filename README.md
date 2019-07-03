@@ -4,6 +4,8 @@
 
 This service utilizes Micronaut with ORDS to persist users to a `user` table in an Oracle ATP instance.
 
+To learn more about ORDS, refer to [this blog post](https://blogs.oracle.com/developers/rest-services-now-available-for-oracle-autonomous-database).
+
 ## Setup
 
 
