@@ -63,7 +63,109 @@ CREATE TABLE users(
 );
 ```
 
-_TODO: add ORDS statements..._
+### ORDS 'Auto' REST Enable
+
+REST enable the schema and the table:
+
+```oracle
+BEGIN
+    /* enable ORDS for schema */
+    ORDS.ENABLE_SCHEMA(p_enabled => TRUE,
+                       p_schema => 'USERSVC',
+                       p_url_mapping_type => 'BASE_PATH',
+                       p_url_mapping_pattern => 'usersvc',
+                       p_auto_rest_auth => FALSE);
+     /* enable ORDS for table */         
+    ORDS.ENABLE_OBJECT(p_enabled => TRUE,
+                       p_schema => 'USERSVC',
+                       p_object => 'USERS',
+                       p_object_type => 'TABLE',
+                       p_object_alias => 'users',
+                       p_auto_rest_auth => FALSE);
+    COMMIT;
+END;
+```
+
+**Note**: The argument `p_auto_rest_auth` being set to `FALSE` means that all unauthenticated requests will return a `401 Unauthorized` meaning we'll have to send credentials with each REST call.
+
+Create a new privilege:
+
+```oracle
+DECLARE
+ l_roles     OWA.VC_ARR;
+ l_modules   OWA.VC_ARR;
+ l_patterns  OWA.VC_ARR;
+BEGIN
+ l_roles(1)   := 'SQL Developer';
+ l_patterns(1) := '/users/*';
+ ORDS.DEFINE_PRIVILEGE(
+     p_privilege_name => 'rest_privilege',
+     p_roles          => l_roles,
+     p_patterns       => l_patterns,
+     p_modules        => l_modules,
+     p_label          => '',
+     p_description    => '',
+     p_comments       => NULL);
+ COMMIT;
+
+END;
+```
+
+Create an oauth client associated with the privilege:
+
+```oracle
+BEGIN
+  OAUTH.create_client(
+    p_name            => '[Descriptive Name For Client]',
+    p_grant_type      => 'client_credentials',
+    p_owner           => '[Owner Name]',
+    p_description     => '[Client Description]',
+    p_support_email   => '[Email Address]',
+    p_privilege_names => 'rest_privilege'
+  );
+
+  COMMIT;
+END;
+```
+
+Grant the `SQL Developer` role to the client application:
+
+```oracle
+BEGIN
+  OAUTH.grant_client_role(
+    p_client_name => 'Rest Client',
+    p_role_name   => 'SQL Developer'
+  );
+  
+  COMMIT;
+END;
+```
+
+You can now grab the `client_id` and `client_secret` with:
+
+```oracle
+SELECT id, name, client_id, client_secret
+FROM   user_ords_clients;
+```
+
+The `client_id` and `client_secret` can be used to generate an auth token for REST calls (this microservice handles this for you). To run the microservice, you'll need the `client_id` and `client_secret` set as environment variables to run the application. See [setting environment variables](#setting-environment-variables).
+
+### Custom ORDS Services
+
+You can create custom ORDS services like so:
+
+```oracle
+BEGIN
+  ORDS.define_service(
+    p_module_name    => 'users',
+    p_base_path      => 'users/',
+    p_pattern        => 'user/:username',
+    p_method         => 'GET',
+    p_source_type    => ORDS.source_type_collection_feed,
+    p_source         => 'SELECT id, first_name, last_name, created_on FROM users WHERE username = :username OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY');
+  COMMIT;
+END;
+```
 
 ## Dependencies
 
@@ -81,6 +183,16 @@ Or, use the Gradle wrapper:
 ./gradlew assemble
 ```
 
+## Setting environment variables
+
+Set environment variables as follows:
+
+```bash
+export CODES_RECURSIVE_CNMS_ORDS_CLIENT_ID=[CLIENT ID]
+export CODES_RECURSIVE_CNMS_ORDS_CLIENT_SECRET=[CLIENT SECRET]
+export CODES_RECURSIVE_CNMS_ORDS_BASE_URL=[ATP ORDS BASE URL]
+```
+
 ## Running
 
 ```bash
@@ -92,7 +204,7 @@ java -jar build/libs/user-service-ords-0.1.jar
 Get User Service Endpoint (returns 200 OK):
 
 ```bash
-curl -iX GET http://localhost:8080/user                                                                                                                                            
+curl -iX GET http://localhost:8080/user                                                                                                                                      
 HTTP/1.1 200 OK
 Date: Tue, 2 Jul 2019 14:04:25 GMT
 content-type: application/json
@@ -105,7 +217,7 @@ connection: keep-alive
 Save a new user (ID is returned in `Location` header):
 
 ```bash
-curl -iX POST -H "Content-Type: application/json" -d '{"first_name": "Tony", "last_name": "Stark", "username": "ironman"}' http://localhost:8080/user                         
+curl -iX POST -H "Content-Type: application/json" -d '{"first_name": "Tony", "last_name": "Stark", "username": "ironman"}' http://localhost:8080/user
 HTTP/1.1 201 Created
 Location: http://localhost:8080/user/user/8CA3E5278A78A1B4E0532010000A7AFF
 Date: Tue, 2 Jul 2019 13:59:09 GMT
@@ -116,19 +228,20 @@ transfer-encoding: chunked
 Save a new user with invalid data (will return 400 and validation errors):
 
 ```bash
+curl -iX POST -H "Content-Type: application/json" -d '{"first_name": "Tony", "last_name": "Stark", "username": null}' http://localhost:8080/user
 HTTP/1.1 400 Bad Request
-Date: Tue, 2 Jul 2019 14:00:21 GMT
+Date: Wed, 3 Jul 2019 20:45:15 GMT
 content-type: application/json
-content-length: 103
+content-length: 98
 connection: close
 
-{"_links":{"self":{"href":"/user/user","templated":false}},"message":"user.username: must not be null"}%  
+{"_links":{"self":{"href":"/user","templated":false}},"message":"user.username: must not be null"}%
 ```
 
 Get the new user
 
 ```bash
-curl -iX GET http://localhost:8080/user/8CB931BBDA2ABCF7E0532010000A09C7                                                                                                      
+curl -iX GET http://localhost:8080/user/8CB931BBDA2ABCF7E0532010000A09C7
 HTTP/1.1 200 OK
 Date: Tue, 2 Jul 2019 14:00:49 GMT
 content-type: application/json
@@ -141,7 +254,7 @@ connection: keep-alive
 List all users:
 
 ```bash
-curl -iX GET http://localhost:8080/user/users                                                                                                                                      
+curl -iX GET http://localhost:8080/user/users
 HTTP/1.1 200 OK
 Date: Wed, 3 Jul 2019 18:19:03 GMT
 content-type: application/json
@@ -154,7 +267,7 @@ connection: keep-alive
 List all users (paginated):
 
 ```bash
-curl -iX GET http://localhost:8080/user/users/0/1                                                                                                                                  
+curl -iX GET http://localhost:8080/user/users/0/1
 HTTP/1.1 200 OK
 Date: Wed, 3 Jul 2019 18:20:05 GMT
 content-type: application/json
@@ -167,7 +280,7 @@ connection: keep-alive
 Delete a user:
 
 ```bash
-curl -iX DELETE http://localhost:8080/user/8CB41C8DFB2FA3F6E0532010000A42F8                                                                                                   
+curl -iX DELETE http://localhost:8080/user/8CB41C8DFB2FA3F6E0532010000A42F8
 HTTP/1.1 204 No Content
 Date: Tue, 2 Jul 2019 14:06:50 GMT
 connection: keep-alive
@@ -176,7 +289,7 @@ connection: keep-alive
 Confirm delete (same GET by ID will return 404):
 
 ```bash
-curl -iX GET http://localhost:8080/user/8CB41C8DFB2FA3F6E0532010000A42F8                                                                                                      
+curl -iX GET http://localhost:8080/user/8CB41C8DFB2FA3F6E0532010000A42F8
 HTTP/1.1 404 Not Found
 Date: Tue, 2 Jul 2019 14:08:13 GMT
 transfer-encoding: chunked
@@ -202,6 +315,7 @@ Micronaut does not enable health and metrics out of the box, but they are availa
 
 For more, see [https://docs.micronaut.io/latest/guide/index.html#management](https://docs.micronaut.io/latest/guide/index.html#management)
 
+
 ## Dockerfile
 
 The generated `Dockerfile` requires some changes. See the `Dockerfile` for reference.
@@ -214,18 +328,6 @@ docker build -t user-svc-micronaut-native .
 
 ## Running with Docker
 
-Set environment variables as follows:
-
-```bash
-export CODES_RECURSIVE_CNMS_ORDS_CLIENT_ID=[CLIENT ID]
-export CODES_RECURSIVE_CNMS_ORDS_CLIENT_SECRET=[CLIENT SECRET]
-export CODES_RECURSIVE_CNMS_ORDS_BASE_URL=[ATP ORDS BASE URL]
-```
-Build with:
-
-```bash
-docker build -t user-svc-micronaut . 
-``` 
 Run with: 
 
 ```bash
