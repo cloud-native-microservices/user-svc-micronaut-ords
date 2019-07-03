@@ -186,7 +186,7 @@ connection: close
 Get user by username:
 
 ```bash
-curl -iX GET http://localhost:8080/user/username/ironman                                                                                                                   ✹master 
+curl -iX GET http://localhost:8080/user/username/ironman
 HTTP/1.1 200 OK
 Date: Wed, 3 Jul 2019 19:23:55 GMT
 content-type: application/json
