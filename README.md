@@ -90,7 +90,7 @@ CREATE TABLE users(
 
 REST enable the schema and the table:
 
-```oracle
+```sql
 BEGIN
     /* enable ORDS for schema */
     ORDS.ENABLE_SCHEMA(p_enabled => TRUE,
@@ -113,7 +113,7 @@ END;
 
 Create a new privilege:
 
-```oracle
+```sql
 DECLARE
  l_roles     OWA.VC_ARR;
  l_modules   OWA.VC_ARR;
@@ -136,7 +136,7 @@ END;
 
 Create an oauth client associated with the privilege:
 
-```oracle
+```sql
 BEGIN
   OAUTH.create_client(
     p_name            => '[Descriptive Name For Client]',
@@ -153,7 +153,7 @@ END;
 
 Grant the `SQL Developer` role to the client application:
 
-```oracle
+```sql
 BEGIN
   OAUTH.grant_client_role(
     p_client_name => 'Rest Client',
@@ -166,7 +166,7 @@ END;
 
 You can now grab the `client_id` and `client_secret` with:
 
-```oracle
+```sql
 SELECT id, name, client_id, client_secret
 FROM   user_ords_clients;
 ```
@@ -177,7 +177,7 @@ The `client_id` and `client_secret` can be used to generate an auth token for RE
 
 You can create custom ORDS services like so:
 
-```oracle
+```sql
 BEGIN
   ORDS.define_service(
     p_module_name    => 'users',
