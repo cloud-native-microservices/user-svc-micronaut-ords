@@ -39,13 +39,13 @@ To learn more about ORDS, refer to [this blog post](https://blogs.oracle.com/dev
 
 This service was created using the Micronaut CLI like so:
 
-```console
+```bash
 mn create-app codes.recursive.cnms.ords.user-service-ords
 ```
 
 If you'd like support for GraalVM, create the app with the following command instead:
 
-```console
+```bash
 mn create-app codes.recursive.cnms.ords.user-service-ords --features graal-native-image
 ```
 
@@ -196,13 +196,13 @@ This project has no manually installed external dependencies.
 
 ## Building
 
-```console
+```bash
 gradle assemble
 ```
 
 Or, use the Gradle wrapper:
 
-```console
+```bash
 ./gradlew assemble
 ```
 
@@ -210,7 +210,7 @@ Or, use the Gradle wrapper:
 
 Set environment variables as follows:
 
-```console
+```bash
 export CODES_RECURSIVE_CNMS_ORDS_CLIENT_ID=[CLIENT ID]
 export CODES_RECURSIVE_CNMS_ORDS_CLIENT_SECRET=[CLIENT SECRET]
 export CODES_RECURSIVE_CNMS_ORDS_BASE_URL=[ATP ORDS BASE URL]
@@ -218,7 +218,7 @@ export CODES_RECURSIVE_CNMS_ORDS_BASE_URL=[ATP ORDS BASE URL]
 
 ## Running
 
-```console
+```bash
 java -jar build/libs/user-service-ords-0.1.jar
 ```
 
@@ -226,7 +226,7 @@ java -jar build/libs/user-service-ords-0.1.jar
 
 Get User Service Endpoint (returns 200 OK):
 
-```console
+```bash
 curl -iX GET http://localhost:8080/user                                                                                                                                      
 HTTP/1.1 200 OK
 Date: Tue, 2 Jul 2019 14:04:25 GMT
@@ -239,7 +239,7 @@ connection: keep-alive
 
 Save a new user (ID is returned in `Location` header):
 
-```console
+```bash
 curl -iX POST -H "Content-Type: application/json" -d '{"first_name": "Tony", "last_name": "Stark", "username": "ironman"}' http://localhost:8080/user
 HTTP/1.1 201 Created
 Location: http://localhost:8080/user/user/8CA3E5278A78A1B4E0532010000A7AFF
@@ -250,7 +250,7 @@ transfer-encoding: chunked
 
 Save a new user with invalid data (will return 400 and validation errors):
 
-```console
+```bash
 curl -iX POST -H "Content-Type: application/json" -d '{"first_name": "Tony", "last_name": "Stark", "username": null}' http://localhost:8080/user
 HTTP/1.1 400 Bad Request
 Date: Wed, 3 Jul 2019 20:45:15 GMT
@@ -263,7 +263,7 @@ connection: close
 
 Get the new user
 
-```console
+```bash
 curl -iX GET http://localhost:8080/user/8CB931BBDA2ABCF7E0532010000A09C7
 HTTP/1.1 200 OK
 Date: Tue, 2 Jul 2019 14:00:49 GMT
@@ -276,7 +276,7 @@ connection: keep-alive
 
 List all users:
 
-```console
+```bash
 curl -iX GET http://localhost:8080/user/users
 HTTP/1.1 200 OK
 Date: Wed, 3 Jul 2019 18:19:03 GMT
@@ -289,7 +289,7 @@ connection: keep-alive
 
 List all users (paginated):
 
-```console
+```bash
 curl -iX GET http://localhost:8080/user/users/0/1
 HTTP/1.1 200 OK
 Date: Wed, 3 Jul 2019 18:20:05 GMT
@@ -302,7 +302,7 @@ connection: keep-alive
 
 Delete a user:
 
-```console
+```bash
 curl -iX DELETE http://localhost:8080/user/8CB41C8DFB2FA3F6E0532010000A42F8
 HTTP/1.1 204 No Content
 Date: Tue, 2 Jul 2019 14:06:50 GMT
@@ -311,7 +311,7 @@ connection: keep-alive
 
 Confirm delete (same GET by ID will return 404):
 
-```console
+```bash
 curl -iX GET http://localhost:8080/user/8CB41C8DFB2FA3F6E0532010000A42F8
 HTTP/1.1 404 Not Found
 Date: Tue, 2 Jul 2019 14:08:13 GMT
@@ -321,7 +321,7 @@ connection: close
 
 Get user by username:
 
-```console
+```bash
 curl -iX GET http://localhost:8080/user/username/ironman
 HTTP/1.1 200 OK
 Date: Wed, 3 Jul 2019 19:23:55 GMT
@@ -353,7 +353,7 @@ docker build -t user-svc-micronaut-native .
 
 Run with: 
 
-```console
+```bash
 docker run -d --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_ID --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_SECRET --env CODES_RECURSIVE_CNMS_ORDS_BASE_URL --rm -p 8080:8080 -t user-svc-micronaut
 ```
 
@@ -361,19 +361,19 @@ Test the endpoints as [described above](#test-endpoints)
 
 ## Building a Docker Image That Runs A Graal Native Image
 
-```console
+```bash
 docker build -f Dockerfile-graal -t user-svc-micronaut-native . 
 ``` 
 
 ## Running the Graal Based Docker Image
 
-```console
+```bash
 docker run -d --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_ID --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_SECRET --env CODES_RECURSIVE_CNMS_ORDS_BASE_URL --rm -p 8080:8080 -t user-service-ords-native
 ```
 
 ## Building for Deployment
 
-```console
+```bash
 docker build -f Dockerfile-graal -t [region].ocir.io/[tenancy]/[repo]/user-svc-micronaut-native .   
 docker push [region].ocir.io/[tenancy]/[repo]/user-svc-micronaut-native
 ```
@@ -389,7 +389,7 @@ Base64 encode the secret values before creating the YAML file.
 
 On *nix systems, use something like this to accomplish for each value:
 
-```console
+```bash
 echo -n "client_id.." | base64
 ```
 
