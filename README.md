@@ -242,7 +242,7 @@ Save (POST) a new user (ID is returned in `Location` header):
 ```bash
 curl -iX POST -H "Content-Type: application/json" -d '{"first_name": "Tony", "last_name": "Stark", "username": "ironman"}' http://localhost:8080/user
 HTTP/1.1 201 Created
-Location: http://localhost:8080/user/user/8CA3E5278A78A1B4E0532010000A7AFF
+Location: http://localhost:8080/user/8CA3E5278A78A1B4E0532010000A7AFF
 Date: Tue, 2 Jul 2019 13:59:09 GMT
 connection: keep-alive
 transfer-encoding: chunked

@@ -24,7 +24,7 @@ public class OrdsController {
 
     public OrdsController(OrdsClient ordsClient, EmbeddedServer embeddedServer) {
         this.ordsClient = ordsClient;
-        this.baseUri = embeddedServer.getURI() + "/ords";
+        this.baseUri = embeddedServer.getURI() + "/user";
     }
 
     @Get("/")
@@ -92,7 +92,7 @@ public class OrdsController {
     public HttpResponse saveUser(@Body @Valid User user) throws URISyntaxException {
         User savedUser = ordsClient.saveUser(user);
         return HttpResponse.created(
-                new URI(baseUri + "/user/" + savedUser.getId())
+                new URI(baseUri + "/" + savedUser.getId())
         );
     }
 
