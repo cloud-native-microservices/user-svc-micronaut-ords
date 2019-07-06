@@ -96,6 +96,12 @@ public class OrdsController {
         );
     }
 
+    @Put("/")
+    public HttpResponse updateUser(@Body @Valid User user) {
+        ordsClient.updateUser(user, user.getId());
+        return HttpResponse.ok();
+    }
+
     @Delete("/{id}")
     public HttpResponse deleteUser(String id) {
         Map deleteUser = ordsClient.deleteUser(id);

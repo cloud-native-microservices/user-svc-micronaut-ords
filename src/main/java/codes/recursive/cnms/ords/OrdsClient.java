@@ -27,6 +27,9 @@ public abstract class OrdsClient {
     @Post("/ords/usersvc/users/")
     public abstract User saveUser(@Body User user);
 
+    @Put("/ords/usersvc/users/{id}")
+    public abstract User updateUser(@Body User user, @QueryValue String id);
+
     @Delete("/ords/usersvc/users/{id}")
     public abstract Map deleteUser(@QueryValue String id);
 

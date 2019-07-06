@@ -237,7 +237,7 @@ connection: keep-alive
 {"OK":true}     
 ```
 
-Save a new user (ID is returned in `Location` header):
+Save (POST) a new user (ID is returned in `Location` header):
 
 ```bash
 curl -iX POST -H "Content-Type: application/json" -d '{"first_name": "Tony", "last_name": "Stark", "username": "ironman"}' http://localhost:8080/user
@@ -259,6 +259,16 @@ content-length: 98
 connection: close
 
 {"_links":{"self":{"href":"/user","templated":false}},"message":"user.username: must not be null"}
+```
+
+Update (PUT) an existing user:
+
+```bash
+curl -iX PUT -H "Content-Type: application/json" -d '{ "id": "8CCBD5FBBB5D98EDE0532010000A7B85", "username": "ironman", "first_name": "T", "last_name": "Stark", "created_on": "2019-07-03T18:14:44.638Z" }' http://localhost:8080/user
+HTTP/1.1 200 OK
+Date: Sat, 6 Jul 2019 04:26:12 GMT
+connection: keep-alive
+transfer-encoding: chunked
 ```
 
 Get the new user
