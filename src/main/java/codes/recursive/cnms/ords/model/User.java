@@ -1,6 +1,6 @@
 package codes.recursive.cnms.ords.model;
 
-
+import codes.recursive.cnms.ords.validator.UniqueUsername;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,6 +25,7 @@ public class User {
     private String lastName;
     @NotNull
     @Size(max = 50)
+    @UniqueUsername(message = "Username must be unique")
     private String username;
     @JsonProperty("created_on")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
