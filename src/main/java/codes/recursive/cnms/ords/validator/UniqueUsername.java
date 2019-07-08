@@ -14,8 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface UniqueUsername {
 
-    String message() default "{org.hibernate.validator.referenceguide.chapter06.CheckCase." +
-            "message}";
+    String message() default "Username must exist and be unique";
 
     Class<?>[] groups() default { };
 
