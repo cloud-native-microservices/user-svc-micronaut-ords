@@ -1,6 +1,6 @@
 package codes.recursive.cnms.ords.validator;
 
-import codes.recursive.cnms.ords.OrdsClient;
+import codes.recursive.cnms.ords.UserClient;
 import codes.recursive.cnms.ords.model.User;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.http.HttpRequest;
@@ -15,11 +15,11 @@ import java.util.Optional;
 
 public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername, User> {
 
-    private OrdsClient ordsClient;
+    private UserClient userClient;
 
     @Inject
-    public UniqueUsernameValidator(OrdsClient ordsClient) {
-        this.ordsClient = ordsClient;
+    public UniqueUsernameValidator(UserClient userClient) {
+        this.userClient = userClient;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class UniqueUsernameValidator implements ConstraintValidator<UniqueUserna
         if( user.getUsername() == null ) return false;
         Optional<HttpRequest<Object>> request = ServerRequestContext.currentRequest();
         Boolean isUpdate = request.isPresent() && request.get().getMethod().name().equals("PUT");
-        User retrievedUser = ordsClient.getByUsername(user.getUsername());
+        User retrievedUser = userClient.getByUsername(user.getUsername());
 
         // if it's a new user, check if we have an existing user by this username
         if( !isUpdate ) {

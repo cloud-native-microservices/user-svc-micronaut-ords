@@ -10,7 +10,7 @@ import java.util.Map;
 @Client(
         value = "${codes.recursive.cnms.ords.base-url}"
 )
-public abstract class OrdsClient {
+public abstract class UserClient {
 
     @Get("/ords/usersvc/users/")
     public abstract Map listUsers();

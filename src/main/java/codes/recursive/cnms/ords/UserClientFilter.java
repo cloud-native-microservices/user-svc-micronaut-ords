@@ -14,26 +14,26 @@ import java.util.Map;
 @Filter("/ords/usersvc/users/**")
 @Requires(property = "codes.recursive.cnms.ords.client-id")
 @Requires(property = "codes.recursive.cnms.ords.client-secret")
-public class OrdsClientFilter implements HttpClientFilter {
-    private final OrdsConfiguration ordsConfiguration;
-    private final OrdsClient ordsClient;
+public class UserClientFilter implements HttpClientFilter {
+    private final UserConfiguration userConfiguration;
+    private final UserClient userClient;
 
     private long lastAuthAt = 0;
     private String currentToken = "";
     private final long timeOut = 60 * 60 * 1000;
 
-    OrdsClientFilter(OrdsConfiguration ordsConfiguration, OrdsClient ordsClient) {
-        this.ordsConfiguration = ordsConfiguration;
-        this.ordsClient = ordsClient;
+    UserClientFilter(UserConfiguration userConfiguration, UserClient userClient) {
+        this.userConfiguration = userConfiguration;
+        this.userClient = userClient;
     }
 
     @Override
     public Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> request, ClientFilterChain chain) {
 
         if( lastAuthAt == 0 || lastAuthAt > 0 && System.currentTimeMillis() - lastAuthAt > timeOut ) {
-            String authString =  ordsConfiguration.clientId + ":" + ordsConfiguration.clientSecret;
+            String authString =  userConfiguration.clientId + ":" + userConfiguration.clientSecret;
             String authEncoded = "Basic " + Base64.getEncoder().encodeToString(authString.getBytes());
-            Map tokenBody = ordsClient.getToken("grant_type=client_credentials", authEncoded);
+            Map tokenBody = userClient.getToken("grant_type=client_credentials", authEncoded);
             currentToken = tokenBody.get("access_token").toString();
             System.out.println("Token: " + currentToken);
             lastAuthAt = System.currentTimeMillis();

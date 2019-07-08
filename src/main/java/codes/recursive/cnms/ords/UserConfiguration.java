@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ConfigurationProperties("codes.recursive.cnms.ords")
-public class OrdsConfiguration {
+public class UserConfiguration {
     String clientId;
     String clientSecret;
     String baseUrl;

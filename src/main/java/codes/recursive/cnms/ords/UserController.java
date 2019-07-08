@@ -20,14 +20,14 @@ import java.util.Map;
 
 @Validated
 @Controller("/user")
-public class OrdsController {
-    private final OrdsClient ordsClient;
+public class UserController {
+    private final UserClient userClient;
     private final String baseUri;
     @Inject
     Validator validator;
 
-    public OrdsController(OrdsClient ordsClient, EmbeddedServer embeddedServer) {
-        this.ordsClient = ordsClient;
+    public UserController(UserClient userClient, EmbeddedServer embeddedServer) {
+        this.userClient = userClient;
         this.baseUri = embeddedServer.getURI() + "/user";
     }
 
@@ -42,7 +42,7 @@ public class OrdsController {
 
     @Get("/{id}")
     public HttpResponse<User> getUser(String id) {
-        User user = ordsClient.getUser(id);
+        User user = userClient.getUser(id);
         if( user != null ) {
             return HttpResponse.ok(user);
         }
@@ -54,7 +54,7 @@ public class OrdsController {
     @Get("/users")
     public HttpResponse<Map<String, Object>> listUsers() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        Map users = ordsClient.listUsers();
+        Map users = userClient.listUsers();
         List<User> items = objectMapper.convertValue(users.get("items"), new TypeReference<List<User>>() {});
         Map<String, Object> response = new HashMap<>();
         response.put("users", items);
@@ -66,7 +66,7 @@ public class OrdsController {
     @Get("/users/{offset}/{max}")
     public HttpResponse<Map<String, Object>> listUsersPaginated(int offset, int max) {
         ObjectMapper objectMapper = new ObjectMapper();
-        Map users = ordsClient.listUsers(offset, max);
+        Map users = userClient.listUsers(offset, max);
         List<User> items = objectMapper.convertValue(users.get("items"), new TypeReference<List<User>>() {});
         Map<String, Object> response = new HashMap<>();
         response.put("users", items);
@@ -81,7 +81,7 @@ public class OrdsController {
 
     @Get("/username/{username}")
     public HttpResponse<User> getUserByUsername(String username) {
-        User user = ordsClient.getByUsername(username);
+        User user = userClient.getByUsername(username);
         if( user != null ) {
             return HttpResponse.ok(user);
         }
@@ -92,7 +92,7 @@ public class OrdsController {
 
     @Post("/")
     public HttpResponse saveUser(@Body @Valid User user) throws URISyntaxException {
-        User savedUser = ordsClient.saveUser(user);
+        User savedUser = userClient.saveUser(user);
         return HttpResponse.created(
                 new URI(baseUri + "/" + savedUser.getId())
         );
@@ -100,13 +100,13 @@ public class OrdsController {
 
     @Put("/")
     public HttpResponse updateUser(@Body @Valid User user) {
-        ordsClient.updateUser(user, user.getId());
+        userClient.updateUser(user, user.getId());
         return HttpResponse.ok();
     }
 
     @Delete("/{id}")
     public HttpResponse deleteUser(String id) {
-        Map deleteUser = ordsClient.deleteUser(id);
+        Map deleteUser = userClient.deleteUser(id);
         return HttpResponse.noContent();
     }
 }
