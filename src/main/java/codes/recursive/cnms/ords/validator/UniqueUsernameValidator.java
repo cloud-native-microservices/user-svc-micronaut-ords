@@ -15,8 +15,12 @@ import java.util.Optional;
 
 public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername, User> {
 
-    @Inject
     private OrdsClient ordsClient;
+
+    @Inject
+    public UniqueUsernameValidator(OrdsClient ordsClient) {
+        this.ordsClient = ordsClient;
+    }
 
     @Override
     public boolean isValid(@Nullable User user, @Nonnull AnnotationValue<UniqueUsername> annotationMetadata, @Nonnull ConstraintValidatorContext context) {
