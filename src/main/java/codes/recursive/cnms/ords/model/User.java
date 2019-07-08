@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Map;
 
 @Introspected
+@UniqueUsername(message = "Username must exist and be unique")
 public class User {
 
     private String id;
@@ -25,7 +26,6 @@ public class User {
     private String lastName;
     @NotNull
     @Size(max = 50)
-    @UniqueUsername(message = "Username must be unique")
     private String username;
     @JsonProperty("created_on")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")

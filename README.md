@@ -88,7 +88,15 @@ CREATE TABLE users(
 
 ### ORDS 'Auto' REST Enable
 
-REST enable the schema and the table:
+Out of the box, Auto REST enabling a table will give you endpoints to perform the following actions:
+
+* GET (by ID)
+* GET (all - with pagination support)
+* POST (new record)
+* PUT (update record)
+* DELETE (by ID)
+
+To REST enable the schema and the table:
 
 ```sql
 BEGIN
@@ -175,7 +183,7 @@ The `client_id` and `client_secret` can be used to generate an auth token for RE
 
 ### Custom ORDS Services
 
-You can create custom ORDS services like so:
+You can create custom ORDS services like so (returns a single record instead of a set of results):
 
 ```sql
 BEGIN
@@ -184,7 +192,7 @@ BEGIN
     p_base_path      => 'users/',
     p_pattern        => 'user/:username',
     p_method         => 'GET',
-    p_source_type    => ORDS.source_type_collection_feed,
+    p_source_type    => ORDS.source_type_collection_item,
     p_source         => 'SELECT id, first_name, last_name, created_on FROM users WHERE username = :username OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY');
   COMMIT;
 END;

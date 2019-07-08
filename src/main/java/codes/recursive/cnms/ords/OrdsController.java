@@ -7,7 +7,9 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.validation.Validated;
+import io.micronaut.validation.validator.Validator;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
@@ -21,6 +23,8 @@ import java.util.Map;
 public class OrdsController {
     private final OrdsClient ordsClient;
     private final String baseUri;
+    @Inject
+    Validator validator;
 
     public OrdsController(OrdsClient ordsClient, EmbeddedServer embeddedServer) {
         this.ordsClient = ordsClient;
@@ -77,11 +81,9 @@ public class OrdsController {
 
     @Get("/username/{username}")
     public HttpResponse<User> getUserByUsername(String username) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map users = ordsClient.getByUsername(username);
-        List<User> items = objectMapper.convertValue(users.get("items"), new TypeReference<List<User>>() {});
-        if( items.size() > 0 ) {
-            return HttpResponse.ok(items.get(0));
+        User user = ordsClient.getByUsername(username);
+        if( user != null ) {
+            return HttpResponse.ok(user);
         }
         else {
             return HttpResponse.notFound();
