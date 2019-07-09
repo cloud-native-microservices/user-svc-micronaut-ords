@@ -267,7 +267,7 @@ connection: keep-alive
 {"OK":true}     
 ----
 
-Save (POST) a new user (ID is returned in `Location` header):
+Save (POST) a new user:
 
 [source,bash]
 ----

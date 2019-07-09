@@ -33,47 +33,46 @@ public class UserController {
         );
     }
 
-    @Get("/{id}")
-    public Maybe<User> getUser(String id) {
-        return userClient.getUser(id);
-    }
+@Get("/{id}")
+public Maybe<User> getUser(String id) {
+    return userClient.getUser(id);
+}
 
-    @Get("/users")
-    public Single<PaginatedUserResult> listUsers() {
-        return userClient.listUsers();
-    }
+@Get("/users")
+public Single<PaginatedUserResult> listUsers() {
+    return userClient.listUsers();
+}
 
-    @Get("/users/{offset}/{max}")
-    public Single<PaginatedUserResult> listUsersPaginated(int offset, int max) {
-        return userClient.listUsers(offset, max);
-    }
+@Get("/users/{offset}/{max}")
+public Single<PaginatedUserResult> listUsersPaginated(int offset, int max) {
+    return userClient.listUsers(offset, max);
+}
 
-    @Get("/username/{username}")
-    public Maybe<User> getUserByUsername(String username) {
-        return userClient.getByUsername(username);
-    }
+@Get("/username/{username}")
+public Maybe<User> getUserByUsername(String username) {
+    return userClient.getByUsername(username);
+}
 
-    @Post("/")
-    @Status(HttpStatus.CREATED)
-    public Single<User> saveUser(@Body @Valid User user) {
-        return userClient.saveUser(user);
-    }
+@Post("/")
+@Status(HttpStatus.CREATED)
+public Single<User> saveUser(@Body @Valid User user) {
+    return userClient.saveUser(user);
+}
 
-    @Put("/")
-    public Single<User> updateUser(@Body @Valid User user) {
-        return userClient.updateUser(user, user.getId());
-    }
+@Put("/")
+public Single<User> updateUser(@Body @Valid User user) {
+    return userClient.updateUser(user, user.getId());
+}
 
-    @Delete("/{id}")
-    @Status(HttpStatus.NO_CONTENT)
-    public Single<MutableHttpResponse> deleteUser(String id) {
-        return userClient.deleteUser(id).flatMap(map -> {
-            if (map.get("rowsDeleted").toString().equals("0")) {
-                return Single.just(HttpResponse.notFound());
-            } else {
-                return Single.just(HttpResponse.noContent());
-            }
-        });
-    }
+@Delete("/{id}")
+public Single<MutableHttpResponse> deleteUser(String id) {
+    return userClient.deleteUser(id).flatMap(map -> {
+        if (map.get("rowsDeleted").toString().equals("0")) {
+            return Single.just(HttpResponse.notFound());
+        } else {
+            return Single.just(HttpResponse.noContent());
+        }
+    });
+}
 
 }
