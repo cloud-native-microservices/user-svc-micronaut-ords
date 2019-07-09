@@ -1,10 +1,12 @@
 package codes.recursive.cnms.ords.model;
 
 import codes.recursive.cnms.ords.validator.UniqueUsername;
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Introspected;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -87,12 +89,10 @@ public class User {
         this.createdOn = createdOn;
     }
 
-    @JsonIgnore
     public Map getLinks() {
         return links;
     }
 
-    @JsonIgnore
     public void setLinks(Map links) {
         this.links = links;
     }
