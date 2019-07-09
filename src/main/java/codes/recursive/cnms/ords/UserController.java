@@ -1,34 +1,27 @@
 package codes.recursive.cnms.ords;
 
+import codes.recursive.cnms.ords.model.PaginatedUserResult;
 import codes.recursive.cnms.ords.model.User;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.*;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.validation.Validated;
-import io.micronaut.validation.validator.Validator;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Validated
 @Controller("/user")
 public class UserController {
     private final UserClient userClient;
-    private final String baseUri;
-    @Inject
-    Validator validator;
 
     public UserController(UserClient userClient, EmbeddedServer embeddedServer) {
         this.userClient = userClient;
-        this.baseUri = embeddedServer.getURI() + "/user";
     }
 
     @Get("/")
@@ -41,72 +34,46 @@ public class UserController {
     }
 
     @Get("/{id}")
-    public HttpResponse<User> getUser(String id) {
-        User user = userClient.getUser(id);
-        if( user != null ) {
-            return HttpResponse.ok(user);
-        }
-        else {
-            return HttpResponse.notFound();
-        }
+    public Maybe<User> getUser(String id) {
+        return userClient.getUser(id);
     }
 
     @Get("/users")
-    public HttpResponse<Map<String, Object>> listUsers() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map users = userClient.listUsers();
-        List<User> items = objectMapper.convertValue(users.get("items"), new TypeReference<List<User>>() {});
-        Map<String, Object> response = new HashMap<>();
-        response.put("users", items);
-        return HttpResponse.ok(
-                response
-        );
+    public Single<PaginatedUserResult> listUsers() {
+        return userClient.listUsers();
     }
 
     @Get("/users/{offset}/{max}")
-    public HttpResponse<Map<String, Object>> listUsersPaginated(int offset, int max) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map users = userClient.listUsers(offset, max);
-        List<User> items = objectMapper.convertValue(users.get("items"), new TypeReference<List<User>>() {});
-        Map<String, Object> response = new HashMap<>();
-        response.put("users", items);
-        response.put("count", users.get("count"));
-        response.put("offset", users.get("offset"));
-        response.put("hasMore", users.get("hasMore"));
-        response.put("limit", users.get("limit"));
-        return HttpResponse.ok(
-                response
-        );
+    public Single<PaginatedUserResult> listUsersPaginated(int offset, int max) {
+        return userClient.listUsers(offset, max);
     }
 
     @Get("/username/{username}")
-    public HttpResponse<User> getUserByUsername(String username) {
-        User user = userClient.getByUsername(username);
-        if( user != null ) {
-            return HttpResponse.ok(user);
-        }
-        else {
-            return HttpResponse.notFound();
-        }
+    public Maybe<User> getUserByUsername(String username) {
+        return userClient.getByUsername(username);
     }
 
     @Post("/")
-    public HttpResponse saveUser(@Body @Valid User user) throws URISyntaxException {
-        User savedUser = userClient.saveUser(user);
-        return HttpResponse.created(
-                new URI(baseUri + "/" + savedUser.getId())
-        );
+    @Status(HttpStatus.CREATED)
+    public Single<User> saveUser(@Body @Valid User user) {
+        return userClient.saveUser(user);
     }
 
     @Put("/")
-    public HttpResponse updateUser(@Body @Valid User user) {
-        userClient.updateUser(user, user.getId());
-        return HttpResponse.ok();
+    public Single<User> updateUser(@Body @Valid User user) {
+        return userClient.updateUser(user, user.getId());
     }
 
     @Delete("/{id}")
-    public HttpResponse deleteUser(String id) {
-        Map deleteUser = userClient.deleteUser(id);
-        return HttpResponse.noContent();
+    @Status(HttpStatus.NO_CONTENT)
+    public Single<MutableHttpResponse> deleteUser(String id) {
+        return userClient.deleteUser(id).flatMap(map -> {
+            if (map.get("rowsDeleted").toString().equals("0")) {
+                return Single.just(HttpResponse.notFound());
+            } else {
+                return Single.just(HttpResponse.noContent());
+            }
+        });
     }
+
 }

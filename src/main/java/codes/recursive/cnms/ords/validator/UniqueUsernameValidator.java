@@ -27,7 +27,7 @@ public class UniqueUsernameValidator implements ConstraintValidator<UniqueUserna
         if( user.getUsername() == null ) return false;
         Optional<HttpRequest<Object>> request = ServerRequestContext.currentRequest();
         Boolean isUpdate = request.isPresent() && request.get().getMethod().name().equals("PUT");
-        User retrievedUser = userClient.getByUsername(user.getUsername());
+        User retrievedUser = userClient.getByUsername(user.getUsername()).blockingGet();
 
         // if it's a new user, check if we have an existing user by this username
         if( !isUpdate ) {
