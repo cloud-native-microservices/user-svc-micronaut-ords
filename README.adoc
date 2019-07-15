@@ -408,8 +408,6 @@ docker build -t user-svc-micronaut-native .
 
 == Running with Docker
 
-Run with: 
-
 [source,bash]
 ----
 docker run -d --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_ID --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_SECRET --env CODES_RECURSIVE_CNMS_ORDS_BASE_URL --rm -p 8080:8080 -t user-svc-micronaut
