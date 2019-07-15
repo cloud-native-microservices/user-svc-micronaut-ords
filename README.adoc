@@ -320,7 +320,8 @@ content-type: application/json
 content-length: 145
 connection: keep-alive
 
-{"id":"8D397B08E839FD7EE0531F10000AF8D1","username":"ironman","first_name":"Anthony","last_name":"Stark","created_on":"2019-07-09T05:55:16.086Z"}%----
+{"id":"8D397B08E839FD7EE0531F10000AF8D1","username":"ironman","first_name":"Anthony","last_name":"Stark","created_on":"2019-07-09T05:55:16.086Z"}
+----
 
 List all users:
 
