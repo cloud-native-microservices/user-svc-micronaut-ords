@@ -403,14 +403,18 @@ The generated `Dockerfile` requires some changes. See the `Dockerfile` for refer
 
 [source]
 ----
-docker build -t user-svc-micronaut-native .
+docker build -t user-svc-micronaut .
 ----
 
 == Running with Docker
 
 [source,bash]
 ----
-docker run -d --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_ID --env CODES_RECURSIVE_CNMS_ORDS_CLIENT_SECRET --env CODES_RECURSIVE_CNMS_ORDS_BASE_URL --rm -p 8080:8080 -t user-svc-micronaut
+docker run -d \
+--env CODES_RECURSIVE_CNMS_ORDS_CLIENT_ID \
+--env CODES_RECURSIVE_CNMS_ORDS_CLIENT_SECRET \
+--env CODES_RECURSIVE_CNMS_ORDS_BASE_URL \
+--rm -p 8080:8080 -t user-svc-micronaut
 ----
 
 Test the endpoints as link:#test-endpoints[described above]
